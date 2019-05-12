@@ -1,0 +1,3 @@
+rootProject.name = 'useit_tableros'
+
+include ':app'
