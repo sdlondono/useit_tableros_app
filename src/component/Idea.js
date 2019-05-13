@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import axios from 'axios'
 
+let ideas = [];
+
 export default class Idea extends Component {
 
     state = {
@@ -19,7 +21,11 @@ export default class Idea extends Component {
 
         this.state.user.map(async (user) => {
             await axios.get(`https://task-useit.herokuapp.com/api/idea/${user.id}/${this.props.tablero}`).then(res => {
-                this.setState({ idea: res.data })
+                if (res.data.length > 0) {
+                    ideas.push(res.data)
+                    this.setState({ idea: ideas })
+                    console.log(ideas)
+                }
             }).catch((err) => console.log(err))
         })
 
@@ -30,12 +36,15 @@ export default class Idea extends Component {
         return (
             <View>
                 {this.state.idea.map((val, index) => {
-                    return (
-                        <View  key={index} style={{ marginTop: 10}}>
-                            <Text>Idea :</Text>
-                            <Text style={{ color: '#9f9f9f', fontSize: 13}}> {val.comment} </Text>
-                        </View>
-                    )
+                    return val.map((idea, index) => {
+
+                        return (
+                            <View key={index} style={{ marginTop: 10 }}>
+                                <Text style={{ fontSize: 12}}>Idea</Text>
+                                <Text style={{ color: '#9f9f9f', fontSize: 20 }}>{idea.comment}</Text>
+                            </View>
+                        )
+                    })
                 })}
             </View>
         )
